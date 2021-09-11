@@ -2,8 +2,11 @@ package jp.cordea.komunika.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +23,15 @@ fun Home() {
 
 @Composable
 fun HomeContent() {
-
+    Scaffold(
+        topBar = { TopAppBar(title = { Text(text = "Komunika") }) }
+    ) {
+        LazyColumn(
+            contentPadding = PaddingValues(all = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+        }
+    }
 }
 
 @Composable
