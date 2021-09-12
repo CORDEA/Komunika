@@ -8,6 +8,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -18,19 +20,21 @@ import jp.cordea.komunika.ui.theme.KomunikaTheme
 
 @Composable
 fun Home(viewModel: HomeViewModel) {
-    HomeContent()
-}
-
-@Composable
-fun HomeContent() {
     Scaffold(
         topBar = { TopAppBar(title = { Text(text = "Komunika") }) }
     ) {
-        LazyColumn(
-            contentPadding = PaddingValues(all = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-        }
+        HomeContent(viewModel)
+    }
+}
+
+@Composable
+fun HomeContent(viewModel: HomeViewModel) {
+    val items by viewModel.items.observeAsState(emptyList())
+    LazyColumn(
+        contentPadding = PaddingValues(all = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items.map { item { HomeItem(viewModel = it) } }
     }
 }
 

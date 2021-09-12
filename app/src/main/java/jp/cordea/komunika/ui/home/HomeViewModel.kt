@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private val _items = MutableLiveData<List<HomeItemViewModel>>()
-    private val items: LiveData<List<HomeItemViewModel>> get() = _items
+    val items: LiveData<List<HomeItemViewModel>> get() = _items
 }
 
 class HomeItemViewModel(
