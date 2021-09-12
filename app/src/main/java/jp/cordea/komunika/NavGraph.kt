@@ -1,6 +1,7 @@
 package jp.cordea.komunika
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,7 +18,7 @@ fun NavGraph(
 ) {
     NavHost(navController = navController, startDestination = Destination.HOME) {
         composable(route = Destination.HOME) {
-            Home()
+            Home(hiltViewModel())
         }
     }
 }

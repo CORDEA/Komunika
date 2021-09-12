@@ -17,7 +17,7 @@ import coil.compose.rememberImagePainter
 import jp.cordea.komunika.ui.theme.KomunikaTheme
 
 @Composable
-fun Home() {
+fun Home(viewModel: HomeViewModel) {
     HomeContent()
 }
 
