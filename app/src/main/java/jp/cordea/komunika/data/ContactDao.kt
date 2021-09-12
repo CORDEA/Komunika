@@ -8,11 +8,11 @@ import androidx.room.Query
 @Dao
 interface ContactDao {
     @Query("SELECT * FROM contact")
-    fun findAll(): List<Contact>
+    suspend fun findAll(): List<Contact>
 
     @Insert
-    fun insert(contact: Contact)
+    suspend fun insert(contact: Contact)
 
     @Delete
-    fun delete(contact: Contact)
+    suspend fun delete(contact: Contact)
 }
