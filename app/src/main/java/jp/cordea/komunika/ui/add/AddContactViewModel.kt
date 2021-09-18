@@ -28,6 +28,9 @@ class AddContactViewModel @Inject constructor(
     private val _company = MutableStateFlow("")
     val company get() = _company.asStateFlow()
 
+    private val _event = MutableSharedFlow<AddContactEvent>()
+    val event get() = _event.asSharedFlow()
+
     fun onFirstNameChanged(firstName: String) {
         _firstName.tryEmit(firstName)
     }
@@ -59,6 +62,11 @@ class AddContactViewModel @Inject constructor(
             )
         )
             .flowOn(Dispatchers.IO)
+            .transform { emit(_event.emit(AddContactEvent.Back)) }
             .launchIn(viewModelScope)
     }
+}
+
+sealed class AddContactEvent {
+    object Back : AddContactEvent()
 }

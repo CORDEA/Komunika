@@ -9,9 +9,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun AddContact(viewModel: AddContactViewModel) {
+fun AddContact(viewModel: AddContactViewModel, navController: NavController) {
+    val event by viewModel.event.collectAsState(initial = null)
+    when (event) {
+        AddContactEvent.Back -> navController.popBackStack()
+    }
+
     Scaffold(
         topBar = { TopAppBar(title = { Text(text = "Add contact") }) },
         floatingActionButton = {
