@@ -1,13 +1,18 @@
 package jp.cordea.komunika.ui.add
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import jp.cordea.komunika.data.Contact
+import jp.cordea.komunika.repository.ContactRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
-class AddContactViewModel @Inject constructor() : ViewModel() {
+class AddContactViewModel @Inject constructor(
+    private val repository: ContactRepository
+) : ViewModel() {
     private val _firstName = MutableStateFlow("")
     val firstName get() = _firstName.asStateFlow()
 
@@ -44,6 +49,16 @@ class AddContactViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onFabClicked() {
-
+        repository.insert(
+            Contact(
+                firstName = firstName.value,
+                lastName = lastName.value,
+                phoneNumber = phoneNumber.value,
+                emailAddress = emailAddress.value,
+                company = company.value,
+            )
+        )
+            .flowOn(Dispatchers.IO)
+            .launchIn(viewModelScope)
     }
 }
