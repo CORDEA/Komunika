@@ -3,10 +3,9 @@ package jp.cordea.komunika.ui.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -15,13 +14,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import jp.cordea.komunika.Destination
 import jp.cordea.komunika.ui.theme.KomunikaTheme
 
 @Composable
-fun Home(viewModel: HomeViewModel) {
+fun Home(viewModel: HomeViewModel, navController: NavController) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text(text = "Komunika") }) }
+        topBar = { TopAppBar(title = { Text(text = "Komunika") }) },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                navController.navigate(Destination.ADD_CONTACT)
+            }) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        }
     ) {
         HomeContent(viewModel)
     }
