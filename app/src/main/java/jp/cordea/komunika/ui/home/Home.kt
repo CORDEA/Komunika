@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -21,12 +22,16 @@ import jp.cordea.komunika.ui.theme.KomunikaTheme
 
 @Composable
 fun Home(viewModel: HomeViewModel, navController: NavController) {
+    val event by viewModel.event.collectAsState(initial = null)
+    when (event) {
+        HomeEvent.NavigateToAddContact -> {
+            navController.navigate(Destination.ADD_CONTACT)
+        }
+    }
     Scaffold(
         topBar = { TopAppBar(title = { Text(text = "Komunika") }) },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate(Destination.ADD_CONTACT)
-            }) {
+            FloatingActionButton(onClick = viewModel::onFabClicked) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }

@@ -7,10 +7,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.cordea.komunika.repository.ContactRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,6 +36,15 @@ class HomeViewModel @Inject constructor(
 
     private val _items = MutableLiveData<List<HomeItemViewModel>>()
     val items: LiveData<List<HomeItemViewModel>> get() = _items
+
+    private val _event = MutableSharedFlow<HomeEvent>()
+    val event = _event.asSharedFlow()
+
+    fun onFabClicked() {
+        viewModelScope.launch {
+            _event.emit(HomeEvent.NavigateToAddContact)
+        }
+    }
 }
 
 class HomeItemViewModel(
@@ -46,3 +53,7 @@ class HomeItemViewModel(
     val title: String,
     val body: String
 )
+
+sealed class HomeEvent {
+    object NavigateToAddContact : HomeEvent()
+}
