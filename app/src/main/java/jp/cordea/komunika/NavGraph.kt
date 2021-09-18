@@ -23,7 +23,7 @@ fun NavGraph(
             Home(hiltViewModel(), navController)
         }
         composable(route = Destination.ADD_CONTACT) {
-            AddContact()
+            AddContact(hiltViewModel())
         }
     }
 }

@@ -6,7 +6,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 
 @Composable
-fun AddContact() {
+fun AddContact(viewModel: AddContactViewModel) {
     Scaffold(
         topBar = { TopAppBar(title = { Text(text = "Add contact") }) }
     ) {
