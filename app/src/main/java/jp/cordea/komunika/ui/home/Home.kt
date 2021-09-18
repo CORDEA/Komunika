@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import jp.cordea.komunika.Destination
+import jp.cordea.komunika.ui.add.AddContactResult
 import jp.cordea.komunika.ui.theme.KomunikaTheme
 
 @Composable
@@ -26,6 +27,12 @@ fun Home(viewModel: HomeViewModel, navController: NavController) {
     when (event) {
         HomeEvent.NavigateToAddContact -> {
             navController.navigate(Destination.ADD_CONTACT)
+        }
+    }
+    navController.currentBackStackEntry?.run {
+        val result by AddContactResult.observeResult(savedStateHandle).observeAsState()
+        if (result is AddContactResult.Saved) {
+            viewModel.onContactAdded()
         }
     }
     Scaffold(

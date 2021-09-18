@@ -1,5 +1,6 @@
 package jp.cordea.komunika.ui.add
 
+import android.os.Parcelable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -9,13 +10,37 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
+import kotlinx.parcelize.Parcelize
+
+sealed class AddContactResult : Parcelable {
+    companion object {
+        private const val KEY = "add_contact"
+
+        fun storeResult(savedStateHandle: SavedStateHandle) {
+            savedStateHandle[KEY] = Saved
+        }
+
+        fun observeResult(savedStateHandle: SavedStateHandle): LiveData<AddContactResult> =
+            savedStateHandle.getLiveData(KEY)
+    }
+
+    @Parcelize
+    object Saved : AddContactResult()
+}
 
 @Composable
 fun AddContact(viewModel: AddContactViewModel, navController: NavController) {
     val event by viewModel.event.collectAsState(initial = null)
     when (event) {
-        AddContactEvent.Back -> navController.popBackStack()
+        AddContactEvent.Back -> {
+            navController.previousBackStackEntry?.run {
+                AddContactResult.storeResult(savedStateHandle)
+            }
+            navController.popBackStack()
+        }
     }
 
     Scaffold(

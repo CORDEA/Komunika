@@ -13,9 +13,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    repository: ContactRepository
+    private val repository: ContactRepository
 ) : ViewModel() {
     init {
+        fetchItems()
+    }
+
+    private val _items = MutableLiveData<List<HomeItemViewModel>>()
+    val items: LiveData<List<HomeItemViewModel>> get() = _items
+
+    private val _event = MutableSharedFlow<HomeEvent>()
+    val event = _event.asSharedFlow()
+
+    fun onFabClicked() {
+        viewModelScope.launch {
+            _event.emit(HomeEvent.NavigateToAddContact)
+        }
+    }
+
+    fun onContactAdded() {
+        fetchItems()
+    }
+
+    private fun fetchItems() {
         repository.findAll()
             .map { list ->
                 list.map {
@@ -32,18 +52,6 @@ class HomeViewModel @Inject constructor(
                 _items.value = it
             }
             .launchIn(viewModelScope)
-    }
-
-    private val _items = MutableLiveData<List<HomeItemViewModel>>()
-    val items: LiveData<List<HomeItemViewModel>> get() = _items
-
-    private val _event = MutableSharedFlow<HomeEvent>()
-    val event = _event.asSharedFlow()
-
-    fun onFabClicked() {
-        viewModelScope.launch {
-            _event.emit(HomeEvent.NavigateToAddContact)
-        }
     }
 }
 
