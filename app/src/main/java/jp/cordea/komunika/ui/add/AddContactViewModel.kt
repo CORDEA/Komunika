@@ -13,6 +13,9 @@ import javax.inject.Inject
 class AddContactViewModel @Inject constructor(
     private val repository: ContactRepository
 ) : ViewModel() {
+    private val _thumbnail = MutableStateFlow("")
+    val thumbnail get() = _thumbnail.asStateFlow()
+
     private val _firstName = MutableStateFlow("")
     val firstName get() = _firstName.asStateFlow()
 
@@ -30,6 +33,9 @@ class AddContactViewModel @Inject constructor(
 
     private val _event = MutableSharedFlow<AddContactEvent>()
     val event get() = _event.asSharedFlow()
+
+    fun onAddThumbnailClicked() {
+    }
 
     fun onFirstNameChanged(firstName: String) {
         _firstName.tryEmit(firstName)
