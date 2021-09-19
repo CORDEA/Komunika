@@ -1,19 +1,22 @@
 package jp.cordea.komunika.ui.add
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.cordea.komunika.data.Contact
 import jp.cordea.komunika.repository.ContactRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddContactViewModel @Inject constructor(
     private val repository: ContactRepository
 ) : ViewModel() {
-    private val _thumbnail = MutableStateFlow("")
+    private val _thumbnail = MutableStateFlow(Uri.EMPTY)
     val thumbnail get() = _thumbnail.asStateFlow()
 
     private val _firstName = MutableStateFlow("")
@@ -35,6 +38,11 @@ class AddContactViewModel @Inject constructor(
     val event get() = _event.asSharedFlow()
 
     fun onAddThumbnailClicked() {
+        viewModelScope.launch { _event.emit(AddContactEvent.PickImage()) }
+    }
+
+    fun onThumbnailAdded(path: Uri?) {
+        path?.let { _thumbnail.tryEmit(it) }
     }
 
     fun onFirstNameChanged(firstName: String) {
@@ -75,4 +83,5 @@ class AddContactViewModel @Inject constructor(
 
 sealed class AddContactEvent {
     object Back : AddContactEvent()
+    class PickImage : AddContactEvent()
 }

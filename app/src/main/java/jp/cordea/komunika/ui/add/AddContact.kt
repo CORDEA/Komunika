@@ -1,8 +1,10 @@
 package jp.cordea.komunika.ui.add
 
+import android.net.Uri
 import android.os.Parcelable
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,6 +13,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +22,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.parcelize.Parcelize
 
 sealed class AddContactResult : Parcelable {
@@ -39,6 +44,10 @@ sealed class AddContactResult : Parcelable {
 
 @Composable
 fun AddContact(viewModel: AddContactViewModel, navController: NavController) {
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { viewModel.onThumbnailAdded(it) }
+    )
     val event by viewModel.event.collectAsState(initial = null)
     when (event) {
         AddContactEvent.Back -> {
@@ -47,6 +56,7 @@ fun AddContact(viewModel: AddContactViewModel, navController: NavController) {
             }
             navController.popBackStack()
         }
+        is AddContactEvent.PickImage -> launcher.launch("image/*")
     }
 
     Scaffold(
@@ -65,7 +75,7 @@ fun AddContact(viewModel: AddContactViewModel, navController: NavController) {
 private fun Content(viewModel: AddContactViewModel) {
     Column(modifier = Modifier.padding(16.dp)) {
         val thumbnail by viewModel.thumbnail.collectAsState()
-        if (thumbnail.isEmpty()) {
+        if (thumbnail == Uri.EMPTY) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
