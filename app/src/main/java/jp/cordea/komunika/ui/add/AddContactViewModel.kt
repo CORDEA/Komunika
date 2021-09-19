@@ -3,7 +3,6 @@ package jp.cordea.komunika.ui.add
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.cordea.komunika.data.Contact
 import jp.cordea.komunika.repository.ContactRepository
@@ -68,6 +67,7 @@ class AddContactViewModel @Inject constructor(
     fun onFabClicked() {
         repository.insert(
             Contact(
+                thumbnail = thumbnail.value?.toString().orEmpty(),
                 firstName = firstName.value,
                 lastName = lastName.value,
                 phoneNumber = phoneNumber.value,

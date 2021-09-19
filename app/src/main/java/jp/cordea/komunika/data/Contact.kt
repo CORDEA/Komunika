@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey
 data class Contact(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
+    @ColumnInfo(name = "thumbnail")
+    val thumbnail: String,
     @ColumnInfo(name = "first_name")
     val firstName: String,
     @ColumnInfo(name = "last_name")
@@ -20,10 +22,11 @@ data class Contact(
     val company: String
 ) {
     constructor(
+        thumbnail: String,
         firstName: String,
         lastName: String,
         phoneNumber: String,
         emailAddress: String,
         company: String
-    ) : this(0, firstName, lastName, phoneNumber, emailAddress, company)
+    ) : this(0, thumbnail, firstName, lastName, phoneNumber, emailAddress, company)
 }

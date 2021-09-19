@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
                 list.map {
                     HomeItemViewModel(
                         it.id,
-                        "",
+                        it.thumbnail,
                         "${it.firstName} ${it.lastName}",
                         ""
                     )
