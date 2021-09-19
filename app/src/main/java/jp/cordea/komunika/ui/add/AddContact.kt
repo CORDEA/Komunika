@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
@@ -41,9 +42,14 @@ sealed class AddContactResult : Parcelable {
 @Composable
 @ExperimentalMaterialApi
 fun AddContact(viewModel: AddContactViewModel, navController: NavController) {
+    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
-        onResult = { viewModel.onThumbnailAdded(it) }
+        onResult = { uri ->
+            context.contentResolver.openInputStream(uri)?.use {
+                viewModel.onThumbnailAdded(it.readBytes())
+            }
+        }
     )
     val event by viewModel.event.collectAsState(initial = null)
     when (event) {

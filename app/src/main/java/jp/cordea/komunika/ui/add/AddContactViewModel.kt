@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.cordea.komunika.data.Contact
 import jp.cordea.komunika.repository.ContactRepository
+import jp.cordea.komunika.repository.ImagePersistenceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddContactViewModel @Inject constructor(
-    private val repository: ContactRepository
+    private val imagePersistenceRepository: ImagePersistenceRepository,
+    private val contactRepository: ContactRepository
 ) : ViewModel() {
     private val _thumbnail = MutableStateFlow(Uri.EMPTY)
     val thumbnail get() = _thumbnail.asStateFlow()
@@ -40,8 +42,12 @@ class AddContactViewModel @Inject constructor(
         viewModelScope.launch { _event.emit(AddContactEvent.PickImage()) }
     }
 
-    fun onThumbnailAdded(path: Uri?) {
-        path?.let { _thumbnail.tryEmit(it) }
+    fun onThumbnailAdded(bytes: ByteArray) {
+        imagePersistenceRepository.insert(bytes)
+            .flowOn(Dispatchers.IO)
+            .onEach { _thumbnail.tryEmit(it) }
+            .catch { it.printStackTrace() }
+            .launchIn(viewModelScope)
     }
 
     fun onFirstNameChanged(firstName: String) {
@@ -65,7 +71,7 @@ class AddContactViewModel @Inject constructor(
     }
 
     fun onFabClicked() {
-        repository.insert(
+        contactRepository.insert(
             Contact(
                 thumbnail = thumbnail.value?.toString().orEmpty(),
                 firstName = firstName.value,
