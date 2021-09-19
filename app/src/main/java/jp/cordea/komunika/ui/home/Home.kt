@@ -1,6 +1,7 @@
 package jp.cordea.komunika.ui.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -12,6 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +22,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import jp.cordea.komunika.Destination
 import jp.cordea.komunika.ui.add.AddContactResult
+import jp.cordea.komunika.ui.theme.Gray500
 import jp.cordea.komunika.ui.theme.KomunikaTheme
 
 @Composable
@@ -60,7 +64,7 @@ fun HomeContent(viewModel: HomeViewModel) {
 
 @Composable
 private fun HomeItem(viewModel: HomeItemViewModel) {
-    Card(Modifier.height(320.dp)) {
+    Card(Modifier.aspectRatio(19f / 10f)) {
         Box {
             Image(
                 painter = rememberImagePainter(data = viewModel.thumbnailUrl),
@@ -68,15 +72,17 @@ private fun HomeItem(viewModel: HomeItemViewModel) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
-            Column(
+            Box(
                 Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter)
-                    .padding(16.dp)
+                    .background(Brush.verticalGradient(listOf(Color.Transparent, Gray500)))
             ) {
-                Text(viewModel.title)
-                Spacer(Modifier.height(8.dp))
-                Text(viewModel.body)
+                Column(Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)) {
+                    Text(viewModel.title, color = Color.White)
+                    Spacer(Modifier.height(8.dp))
+                    Text(viewModel.body, color = Color.White)
+                }
             }
         }
     }
