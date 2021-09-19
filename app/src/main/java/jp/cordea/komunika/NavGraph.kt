@@ -1,5 +1,6 @@
 package jp.cordea.komunika
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -15,6 +16,7 @@ object Destination {
 }
 
 @Composable
+@ExperimentalMaterialApi
 fun NavGraph(
     navController: NavHostController = rememberNavController(),
 ) {
